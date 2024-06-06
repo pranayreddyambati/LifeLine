@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header > .logo > img {
+            height: 3rem;
+            width: 12rem;
+            padding: 0.4rem 1.2rem;
+            border-radius: 0.75rem;
+            background-color: #e60000;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        header a {
+            color: #ff1900;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ff1900;
+            border-radius: 5px;
+            margin-right: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header a:hover {
+            background-color: white;
+            color: #ff1900;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"] {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            padding: 0.7rem;
+            border: none;
+            background-color: #ff1900;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #e60000;
+        }
+
+        p {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        a {
+            color: #ff1900;
+            text-decoration: none;
+        }
+
+        .double-input-box {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+        }
+
+        .input-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+            }
+
+            .double-input-box {
+                flex-direction: column;
+            }
+
+            form {
+                width: 100%;
+                max-width: 100%;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .input-box {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/photos/logo.png" alt="">
+        </div>
+        <a href="./HospitalSignIn.html">Hospital Portal</a>
+    </header>
+    <main>
+        <form id="registrationForm" action="/signup" method="POST">
+            <h2>Sign Up</h2>
+            <div class="double-input-box">
+                <div class="input-box">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="input-box">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+            </div>
+
+            <div class="input-box">
+                <label for="phoneNumber">Phone number</label>
+                <input type="number" id="phoneNumber" name="phoneNumber" pattern="\d{10}" maxlength="10" required>
+            </div>
+
+            <div class="double-input-box">
+                <div class="input-box">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+            </div>
+            <button id="loginBtn" type="submit">Submit</button>
+            <p><a href="/">Already have an account? Login Here</a></p>
+        </form>
+    </main>
+</body>
+
+</html>

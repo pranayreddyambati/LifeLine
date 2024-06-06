@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header>.logo>img {
+            height: 3rem;
+            width: 12rem;
+            padding: 0.4rem 1.2rem;
+            border-radius: 0.75rem;
+            background-color: #e60000;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        header a {
+            color: #ff1900;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ff1900;
+            border-radius: 5px;
+            margin-right: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header a:hover {
+            background-color: white;
+            color: #ff1900;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+        }
+
+        .left {
+            width: 200px;
+            background-color: #fff;
+            color: #ff1900;
+            padding: 1rem;
+            margin: 1rem;
+            margin-top: 0;
+            border-radius: 1rem;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid #ff1900;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-item:hover,
+        .nav-item.selected {
+            background-color: #dddddd;
+            color: black;
+        }
+
+        .nav-item.selected {
+            border-right: 0.5rem solid #ff1900;
+        }
+
+        .right {
+            flex-grow: 1;
+            padding: 1.5rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+            margin: 1rem;
+            margin-top: 0;
+            overflow: hidden;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            padding: 0.7rem;
+            border: none;
+            background-color: #ff1900;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #e60000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #ff1900;
+            color: white;
+        }
+
+        .double-input-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-box {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 1rem;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            margin: 0 0 1rem;
+        }
+
+        .modal-footer {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .close,
+        .modal-footer button {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            background-color: #ff1900;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .close:hover,
+        .modal-footer button:hover {
+            background-color: #e60000;
+        }
+
+        .modal-footer .cancel {
+            background-color: #dc3545;
+        }
+
+        .modal-footer .cancel:hover {
+            background-color: #c82333;
+        }
+
+        .modal-body p {
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+
+            .left {
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .right {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .double-input-box {
+                flex-direction: column;
+            }
+        }
+
+        form button[type="submit"] {
+            padding: 0.3rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Style for approve button */
+        form button[type="submit"].approve {
+            background-color: #28a745;
+            /* Green color */
+            color: white;
+        }
+
+        /* Style for deny button */
+        form button[type="submit"].deny {
+            background-color: #dc3545;
+            /* Red color */
+            color: white;
+        }
+
+        /* Hover style for buttons */
+        form button[type="submit"]:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+    main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        flex-direction: row;
+        overflow-x: auto;
+        justify-content: space-around; /* Adjust alignment */
+    }
+
+    .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem;
+        margin: 0;
+        border: none;
+        border-right: 1px solid #ff1900;
+    }
+
+    .nav-item:last-child {
+        border-right: none;
+    }
+
+    .right {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .double-input-box {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left {
+        flex-direction: column;
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .nav-item {
+        margin: 0.2rem 0;
+        border-right: none;
+    }
+
+    .right {
+        padding: 1rem;
+    }
+
+    .modal-content {
+        width: 90%;
+        max-width: 100%;
+        padding: 1rem;
+    }
+}
+
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/photos/logo.png" alt="">
+        </div>
+        <a href="/signout">Logout</a>
+    </header>
+    <main>
+        <div class="left">
+            <div class="nav-item selected" data-section="pending-requests">Pending Requests</div>
+            <div class="nav-item" data-section="approved-requests">Approved Requests</div>
+            <div class="nav-item" data-section="rejected-requests">Rejected Requests</div>
+        </div>
+        <div class="right">
+
+            <div id="pending-requests" class="section active">
+                <h1>Pending Requests</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Phone Number</th>
+                            <th>Blood Group</th>
+                            <th>Location</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% pendingRequests.forEach(request=> { %>
+                            <tr>
+                                <td>
+                                    <%= request.patientName %>
+                                </td>
+                                <td>
+                                    <%= request.phoneNumber %>
+                                </td>
+                                <td>
+                                    <%= request.bloodGroup %>
+                                </td>
+                                <td>
+                                    <%= request.location %>
+                                </td>
+                                <td>
+                                    <form action="/approve" method="post">
+                                        <input type="hidden" name="requestId" value="<%= request._id %>">
+                                        <button type="submit" class="approve">Approve</button>
+                                    </form>
+                                    <form action="/reject" method="post">
+                                        <input type="hidden" name="requestId" value="<%= request._id %>">
+                                        <button type="submit" class="deny">Reject</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="approved-requests" class="section">
+                <h1>Approved Requests</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Phone Number</th>
+                            <th>Blood Group</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% approvedRequests.forEach(request=> { %>
+                            <tr>
+                                <td>
+                                    <%= request.patientName %>
+                                </td>
+                                <td>
+                                    <%= request.phoneNumber %>
+                                </td>
+                                <td>
+                                    <%= request.bloodGroup %>
+                                </td>
+                                <td>
+                                    <%= request.location %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="rejected-requests" class="section">
+                <h1>Rejected Requests</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Phone Number</th>
+                            <th>Blood Group</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% rejectedRequests.forEach(request=> { %>
+                            <tr>
+                                <td>
+                                    <%= request.patientName %>
+                                </td>
+                                <td>
+                                    <%= request.phoneNumber %>
+                                </td>
+                                <td>
+                                    <%= request.bloodGroup %>
+                                </td>
+                                <td>
+                                    <%= request.location %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.section');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const sectionToShow = this.getAttribute('data-section');
+                    navItems.forEach(nav => nav.classList.remove('selected'));
+                    this.classList.add('selected');
+                    sections.forEach(section => {
+                        section.classList.toggle('active', section.id === sectionToShow);
+                    });
+                });
+            });
+        }); // Add this closing parenthesis
+    </script>
+</body>
+
+</html>

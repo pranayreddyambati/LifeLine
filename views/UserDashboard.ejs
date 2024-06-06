@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header>.logo>img {
+            height: 3rem;
+            width: 12rem;
+            padding: 0.4rem 1.2rem;
+            border-radius: 0.75rem;
+            background-color: #e60000;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        header a {
+            color: #ff1900;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ff1900;
+            border-radius: 5px;
+            margin-right: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header a:hover {
+            background-color: white;
+            color: #ff1900;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+        }
+
+        .left {
+            width: 200px;
+            background-color: #fff;
+            color: #ff1900;
+            padding: 1rem;
+            margin: 1rem;
+            margin-top: 0;
+            border-radius: 1rem;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid #ff1900;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-item:hover,
+        .nav-item.selected {
+            background-color: #dddddd;
+            color: black;
+        }
+
+        .nav-item.selected {
+            border-right: 0.5rem solid #ff1900;
+        }
+
+        .right {
+            flex-grow: 1;
+            padding: 1.5rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+            margin: 1rem;
+            margin-top: 0;
+            overflow: hidden;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            padding: 0.7rem;
+            border: none;
+            background-color: #ff1900;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #e60000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #ff1900;
+            color: white;
+        }
+
+        .double-input-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-box {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 1rem;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            margin: 0 0 1rem;
+        }
+
+        .modal-footer {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .close,
+        .modal-footer button {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            background-color: #ff1900;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .close:hover,
+        .modal-footer button:hover {
+            background-color: #e60000;
+        }
+
+        .modal-footer .cancel {
+            background-color: #dc3545;
+        }
+
+        .modal-footer .cancel:hover {
+            background-color: #c82333;
+        }
+
+        .modal-body p {
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+
+            .left {
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .right {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .double-input-box {
+                flex-direction: column;
+            }
+        }
+
+        /* Style for Details button */
+        .details-button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            /* Blue color */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Hover style for Details button */
+        .details-button:hover {
+            background-color: #0056b3;
+            /* Darker blue color on hover */
+        }
+
+        @media (max-width: 768px) {
+
+            body,
+            main,
+            header {
+                width: 100%;
+            }
+
+            .left {
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .right {
+                margin: 0;
+                border-radius: 0;
+                margin-left: 1.5rem;
+            }
+
+            .double-input-box {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .input-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/photos/logo.png" alt="">
+        </div>
+        <a href="/signout">Logout</a>
+    </header>
+    <main>
+        <div class="left">
+            <div class="nav-item selected" data-section="donate">Be a Donor</div>
+            <div class="nav-item" data-section="create-request">Create a Request</div>
+            <div class="nav-item" data-section="pending-requests">Requests</div>
+            <div class="nav-item" data-section="find-donors">Find Donors</div>
+        </div>
+        <div class="right">
+            <h2>Hello, <%= user.firstName %>
+                    <%= user.lastName %> 👋</h2>
+
+            <div id="donate" class="section active">
+                <h1>Be a Donor</h1>
+                <form action="/donate" method="post">
+                    <div class="double-input-box">
+                        <div class="input-box">
+                            <label for="donorName">Donor Name:</label>
+                            <input type="text" id="donorName" name="donorName" required>
+                        </div>
+
+                        <div class="input-box">
+                            <label for="bloodGroup">Blood Group: </label>
+                            <select id="bloodGroup" name="bloodGroup" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="double-input-box">
+                        <div class="input-box">
+                            <label for="location">Location:</label>
+                            <input type="text" id="location" name="location" required><br>
+                        </div>
+
+                        <div class="input-box">
+                            <label for="phoneNumber">Phone Number:</label>
+                            <input type="number" id="phoneNumber" name="phoneNumber" maxlength="10" pattern="\d{10}"
+                                required><br>
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+
+            <div id="create-request" class="section">
+                <h1>Create a Request</h1>
+                <form action="/request" method="post">
+                    <div class="double-input-box">
+                        <div class="input-box">
+                            <label for="patientName">Patient Name: </label>
+                            <input type="text" id="patientName" name="patientName" required><br>
+                        </div>
+
+                        <div class="input-box">
+                            <label for="hospitalID">Hospital: </label>
+                            <select id="hospitalID" name="hospitalID" onchange="updateHospitalName()" required>
+                                <option value="" selected disabled>Select</option>
+                                <% hospitals.forEach(hospital=> { %>
+                                    <option value="<%= hospital.hospID %>">
+                                        <%= hospital.hospID %> - <%= hospital.hospName %>
+                                    </option>
+                                    <% }) %>
+                            </select><br>
+                            <input type="hidden" id="hospitalName" name="hospitalName" required>
+                        </div>
+                    </div>
+
+                    <div class="double-input-box">
+                        <div class="input-box">
+                            <label for="bloodGroup">Blood Group: </label>
+                            <select id="bloodGroup" name="bloodGroup" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select><br>
+                        </div>
+
+                        <div class="input-box">
+                            <label for="location">Location: </label>
+                            <input type="text" id="location" name="location" required><br>
+                        </div>
+                    </div>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+
+            <div id="pending-requests" class="section">
+                <h1>Requests</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Hospital Name</th>
+                            <th>Blood Group</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% pendingRequests.forEach(request=> { %>
+                            <tr>
+                                <td>
+                                    <%= request.patientName %>
+                                </td>
+                                <td>
+                                    <%= request.hospitalName %>
+                                </td>
+                                <td>
+                                    <%= request.bloodGroup %>
+                                </td>
+                                <td>
+                                    <%= request.location %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="find-donors" class="section">
+                <h1>Find Donors</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Donor Name</th>
+                            <th>Blood Group</th>
+                            <th>Location</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% JSON.parse(donors).forEach(donor=> { %>
+                            <tr>
+                                <td>
+                                    <%= donor.donorName %>
+                                </td>
+                                <td>
+                                    <%= donor.bloodGroup %>
+                                </td>
+                                <td>
+                                    <%= donor.location %>
+                                </td>
+                                <td><button class="request-donor details-button" data-donor="<%= donor.donorName %>"
+                                        data-blood-group="<%= donor.bloodGroup %>" data-location="<%= donor.location %>"
+                                        data-number="<%= donor.phoneNumber %>">Details</button></td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="voteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Donor Details</h2>
+            </div>
+            <div class="modal-body">
+                <p>Donor Name: <b id="donorNameModal"></b></p>
+                <p>Blood Group: <b id="bloodGroupModal"></b></p>
+                <p>Phone Number: <b id="phoneNumberModal"></b></p>
+                <p>Location: <b id="locationModal"></b></p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel" id="cancelVote">Cancel</button>
+                <a id="callNowLink" href=""><button>Call Now</button></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.section');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const sectionToShow = this.getAttribute('data-section');
+                    navItems.forEach(nav => nav.classList.remove('selected'));
+                    this.classList.add('selected');
+                    sections.forEach(section => {
+                        section.classList.toggle('active', section.id === sectionToShow);
+                    });
+                });
+            });
+
+            const buttons = document.querySelectorAll('.request-donor');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const donorName = this.getAttribute('data-donor');
+                    const bloodGroup = this.getAttribute('data-blood-group');
+                    const location = this.getAttribute('data-location');
+                    const number = this.getAttribute('data-number');
+                    document.getElementById('voteModal').style.display = 'flex';
+                    document.getElementById('donorNameModal').innerText = donorName;
+                    document.getElementById('bloodGroupModal').innerText = bloodGroup;
+                    document.getElementById('locationModal').innerText = location;
+                    document.getElementById('phoneNumberModal').innerText = number;
+                    document.getElementById('callNowLink').href = `tel:${number}`;
+                });
+            });
+
+            document.getElementById('cancelVote').addEventListener('click', function () {
+                document.getElementById('voteModal').style.display = 'none';
+            });
+        });
+
+        function updateHospitalName() {
+            const selectElement = document.getElementById("hospitalID");
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const hospitalName = selectedOption.text.split(' - ')[1];
+            document.getElementById("hospitalName").value = hospitalName;
+        }
+    </script>
+</body>
+
+</html>
