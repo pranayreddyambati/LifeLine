@@ -47,10 +47,8 @@ LifeLine is a web application designed to facilitate blood donation and manage b
 4. Set up environment variables:
    Create a `.env` file in the root directory with the following content:
    ```env
-   PORT=5000
    MONGODB_USERNAME=your_mongodb_username
    MONGODB_PASSWORD=your_mongodb_password
-   MONGODB_DBNAME=LifeLine
    SESSION_KEY=your_session_secret_key
    ```
 
