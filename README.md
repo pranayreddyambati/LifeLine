@@ -112,7 +112,7 @@ LifeLine is a web application designed to facilitate blood donation and manage b
 - `GET /hospitals/dashboard`: Render the hospital dashboard.
 - `POST /approve`: Handle request approval by hospitals.
 - `POST /reject`: Handle request rejection by hospitals.
-- - `GET /signout`: Handle hospital sign-out.
+- `GET /signout`: Handle hospital sign-out.
 
 ## Contributors
 <ul>
